@@ -24,11 +24,32 @@ void deposit(String value) {
 
   try {
     final parsedValue = double.parse(value);
+    final realValue =
+        'R\$ ${parsedValue.toStringAsFixed(2).replaceAll('.', ',')}';
 
-    account.deposit(parsedValue);
+    if (account.deposit(parsedValue)) {
+      print('Deposited R\$ $realValue in ${account.name}\'s account');
+    } else {
+      print('Cannot deposit $realValue');
+    }
+  } catch (e) {
+    print('There is something wrong');
+  }
+}
 
-    print(
-        'Deposited R\$ ${parsedValue.toStringAsFixed(2).replaceAll('.', ',')} in ${account.name}\'s account');
+void withdraw(String value) {
+  final account = _getMainAccount();
+
+  try {
+    final parsedValue = double.parse(value);
+    final realValue =
+        'R\$ ${parsedValue.toStringAsFixed(2).replaceAll('.', ',')}';
+
+    if (account.withdraw(parsedValue)) {
+      print('Withdrawn R\$ $realValue in ${account.name}\'s account');
+    } else {
+      print('Cannot withdraw $realValue');
+    }
   } catch (e) {
     print('There is something wrong');
   }

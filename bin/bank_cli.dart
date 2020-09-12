@@ -12,6 +12,7 @@ void main(List<String> arguments) {
       break;
     case '-w':
     case '--withdraw':
+      cli.withdraw(arguments[1]);
       break;
     default:
       cli.showDefault();

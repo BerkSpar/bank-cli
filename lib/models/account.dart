@@ -30,7 +30,7 @@ class Account {
   }
 
   bool withdraw(double value) {
-    if (value < balance) return false;
+    if (value > balance) return false;
 
     _operations.add(Operation(
       operationType: OperationType.withdraw,
