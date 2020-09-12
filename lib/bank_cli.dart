@@ -1,26 +1,38 @@
+import 'dart:io';
+import 'package:bank_cli/utils/console.dart';
+import 'external/hive.dart';
+import 'external/hive.dart';
 import 'models/account.dart';
 import 'package:intl/intl.dart';
 
+import 'models/account.dart';
+
 void showHelp() {
   final text = '''
--h                        Show all commands
+-h                                     Show all commands.
 --help 
 
--d [double value]         Deposit a specific value above zero
---deposit [double value]  in the main account
+-d [double value]                      Deposit a specific value above zero
+--deposit [double value]               in the main account.
 
--w [double value]         Withdraw a specific value bigger than 
---withdraw [double value] account's balance
+-w [double value]                      Withdraw a specific value bigger than 
+--withdraw [double value]              account's balance.
 
--i                        See main account info
+-i                                     See main account info.
 --info
+
+-l [-u --user | -p --password]         Log in and set main user. Needs a user
+--login [-u --user | -p --password]    and a password.
+
+-r [-u --user | -p --password]         Register a new account. Needs a user and
+--register [-u --user | -p --password] a password. 
 ''';
 
   print(text);
 }
 
 void showDefault() {
-  print('It\'s nothing a command, type -h to help');
+  print('It\'s nothing a command, type -h to help.');
 }
 
 void showInfo() {
@@ -28,7 +40,7 @@ void showInfo() {
 
   final info = '''
 ------- Account -------
-Name: ${account.name}
+Username: ${account.username}
 Balance: R\$ ${account.balance.toStringAsFixed(2).replaceAll('.', ',')}
 
 Member since ${DateFormat('dd/MM/yyyy').format(account.since)}
@@ -47,12 +59,12 @@ void deposit(String value) {
         'R\$ ${parsedValue.toStringAsFixed(2).replaceAll('.', ',')}';
 
     if (account.deposit(parsedValue)) {
-      print('Deposited R\$ $realValue in ${account.name}\'s account');
+      print('Deposited R\$ $realValue in ${account.username}\'s account.');
     } else {
-      print('Cannot deposit $realValue');
+      print('Cannot deposit $realValue.');
     }
   } catch (e) {
-    print('There is something wrong');
+    print('There is something wrong.');
   }
 }
 
@@ -65,15 +77,34 @@ void withdraw(String value) {
         'R\$ ${parsedValue.toStringAsFixed(2).replaceAll('.', ',')}';
 
     if (account.withdraw(parsedValue)) {
-      print('Withdrawn R\$ $realValue in ${account.name}\'s account');
+      print('Withdrawn R\$ $realValue in ${account.username}\'s account.');
     } else {
-      print('Cannot withdraw $realValue');
+      print('Cannot withdraw $realValue.');
     }
   } catch (e) {
-    print('There is something wrong');
+    print('There is something wrong.');
   }
 }
 
+void register(String user, String password) {
+  final bankData = BankData();
+  bankData.registerAccount(user, password);
+}
+
+void login(String user, String password) {
+  // final bankData = BankData();
+  // bankData.loginAccount(user, password);
+  // terminal(windows: 'SET bank_account=$user');
+  // print(terminal(windows: 'ECHO %bank_account%'));
+}
+
 Account _getMainAccount() {
-  return Account('Felipe Passos');
+  // final String result = terminal(windows: 'ECHO %bank_account%');
+  // if (result.substring(0, 14) == '%bank_account%') {
+  //   print('You need login to use this option.');
+  //   exit(2);
+  // } else {
+  //   return Account('Felipe');
+  // }
+  return Account('felipe');
 }
