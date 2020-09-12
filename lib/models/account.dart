@@ -4,16 +4,19 @@ class Account {
   String _name;
   double _balance = 0;
   List<Operation> _operations;
+  DateTime _since;
 
   String get name => _name;
   double get balance => _balance;
   List<Operation> get operations => _operations;
+  DateTime get since => _since;
 
   set name(String name) => _name = name;
 
   Account(name) {
     _name = name;
     _operations = <Operation>[];
+    _since = DateTime.now();
   }
 
   bool deposit(double value) {

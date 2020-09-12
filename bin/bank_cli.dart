@@ -14,6 +14,10 @@ void main(List<String> arguments) {
     case '--withdraw':
       cli.withdraw(arguments[1]);
       break;
+    case '-i':
+    case '--info':
+      cli.showInfo();
+      break;
     default:
       cli.showDefault();
       break;

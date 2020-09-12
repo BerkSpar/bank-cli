@@ -1,4 +1,5 @@
 import 'models/account.dart';
+import 'package:intl/intl.dart';
 
 void showHelp() {
   final text = '''
@@ -10,6 +11,9 @@ void showHelp() {
 
 -w [double value]         Withdraw a specific value bigger than 
 --withdraw [double value] account's balance
+
+-i                        See main account info
+--info
 ''';
 
   print(text);
@@ -17,6 +21,21 @@ void showHelp() {
 
 void showDefault() {
   print('It\'s nothing a command, type -h to help');
+}
+
+void showInfo() {
+  final account = _getMainAccount();
+
+  final info = '''
+------- Account -------
+Name: ${account.name}
+Balance: R\$ ${account.balance.toStringAsFixed(2).replaceAll('.', ',')}
+
+Member since ${DateFormat('dd/MM/yyyy').format(account.since)}
+-----------------------
+''';
+
+  print(info);
 }
 
 void deposit(String value) {
@@ -56,5 +75,5 @@ void withdraw(String value) {
 }
 
 Account _getMainAccount() {
-  return Account('Felipe');
+  return Account('Felipe Passos');
 }
