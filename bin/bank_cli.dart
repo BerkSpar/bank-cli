@@ -1,8 +1,8 @@
 import 'package:bank_cli/bank_cli.dart' as cli;
 
-void main(List<String> arguments) {
+void main(List<String> arguments) async {
   if (arguments.isEmpty) {
-    cli.login('felipe', '1234');
+    await cli.deposit('200');
     return null;
   }
 
@@ -32,6 +32,10 @@ void main(List<String> arguments) {
     case '--register':
       _getUserPassword(
           arguments, (user, password) => cli.register(user, password));
+      break;
+    case '-e':
+    case '--exit-account':
+      cli.logout();
       break;
     default:
       cli.showDefault();

@@ -6,7 +6,7 @@ import 'package:hive/hive.dart';
 import '../models/account.dart';
 
 class BankData {
-  Completer<Box> _completer = Completer<Box>();
+  final Completer<Box> _completer = Completer<Box>();
 
   BankData() {
     _init();
@@ -30,19 +30,46 @@ class BankData {
     }
   }
 
-  Future<Account> loginAccount(String user, String password) async {
+  Future<bool> loginAccount(String user, String password) async {
     try {
       final box = await _completer.future;
 
       final result = await box.get(user);
 
-      if (result != null) {
-        return Account.login(result);
+      final account = Account.login(result);
+      await box.put('current_user', account.register(password));
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<Account> getCurrentUser() async {
+    try {
+      final box = await _completer.future;
+
+      final current_user = await box.get('current_user');
+
+      if (current_user != null) {
+        return Account.login(current_user);
       } else {
         return null;
       }
     } catch (e) {
       return null;
+    }
+  }
+
+  Future<bool> logoutAccount() async {
+    try {
+      final box = await _completer.future;
+
+      await box.put('current_user', null);
+
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 }

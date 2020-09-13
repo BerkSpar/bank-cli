@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:bank_cli/utils/console.dart';
-import 'external/hive.dart';
-import 'external/hive.dart';
+import 'external/bank_data.dart';
+import 'external/bank_data.dart';
 import 'models/account.dart';
 import 'package:intl/intl.dart';
 
@@ -26,6 +26,9 @@ void showHelp() {
 
 -r [-u --user | -p --password]         Register a new account. Needs a user and
 --register [-u --user | -p --password] a password. 
+
+-e                                     Logout the main account. 
+--exit-account
 ''';
 
   print(text);
@@ -35,23 +38,33 @@ void showDefault() {
   print('It\'s nothing a command, type -h to help.');
 }
 
-void showInfo() {
-  final account = _getMainAccount();
+void logout() async {
+  final bankData = BankData();
+
+  final result = await bankData.logoutAccount();
+
+  if (result) {
+    print('All users disconnected.');
+  } else {
+    print('There is something wrong.');
+  }
+}
+
+void showInfo() async {
+  final account = await _getMainAccount();
 
   final info = '''
 ------- Account -------
 Username: ${account.username}
 Balance: R\$ ${account.balance.toStringAsFixed(2).replaceAll('.', ',')}
-
-Member since ${DateFormat('dd/MM/yyyy').format(account.since)}
 -----------------------
 ''';
 
   print(info);
 }
 
-void deposit(String value) {
-  final account = _getMainAccount();
+void deposit(String value) async {
+  final account = await _getMainAccount();
 
   try {
     final parsedValue = double.parse(value);
@@ -68,8 +81,8 @@ void deposit(String value) {
   }
 }
 
-void withdraw(String value) {
-  final account = _getMainAccount();
+void withdraw(String value) async {
+  final account = await _getMainAccount();
 
   try {
     final parsedValue = double.parse(value);
@@ -86,25 +99,37 @@ void withdraw(String value) {
   }
 }
 
-void register(String user, String password) {
+void register(String user, String password) async {
   final bankData = BankData();
-  bankData.registerAccount(user, password);
+  if (await bankData.registerAccount(user, password)) {
+    print('$user registered, please login to user your account.');
+  } else {
+    print('Cannot register $user.');
+  }
 }
 
-void login(String user, String password) {
-  // final bankData = BankData();
-  // bankData.loginAccount(user, password);
-  // terminal(windows: 'SET bank_account=$user');
-  // print(terminal(windows: 'ECHO %bank_account%'));
+void login(String user, String password) async {
+  final bankData = BankData();
+  final result = await bankData.loginAccount(user, password);
+
+  if (result) {
+    print('$user, you are logged now.');
+  } else {
+    print('$user, you aren\'t logged now');
+  }
 }
 
-Account _getMainAccount() {
-  // final String result = terminal(windows: 'ECHO %bank_account%');
-  // if (result.substring(0, 14) == '%bank_account%') {
-  //   print('You need login to use this option.');
-  //   exit(2);
-  // } else {
-  //   return Account('Felipe');
-  // }
-  return Account('felipe');
+Future<Account> _getMainAccount() async {
+  final bankData = BankData();
+
+  final user = await bankData.getCurrentUser();
+
+  if (user != null) {
+    return user;
+  } else {
+    print('You need to make a login.');
+
+    exit(0);
+    return null;
+  }
 }
