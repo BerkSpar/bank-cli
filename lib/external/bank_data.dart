@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:bank_cli/models/operation.dart';
 import 'package:hive/hive.dart';
 
 import '../models/account.dart';
@@ -37,7 +38,20 @@ class BankData {
       final result = await box.get(user);
 
       final account = Account.login(result);
-      await box.put('current_user', account.register(password));
+      await box.put('current_user', account.toJson());
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> save(Operations operations, Account account) async {
+    try {
+      final box = await _completer.future;
+
+      await box.put('current_user', account.toJson());
+      await box.put(account.username, account.toJson());
 
       return true;
     } catch (e) {

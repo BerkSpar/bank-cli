@@ -1,10 +1,5 @@
 import 'dart:io';
-import 'package:bank_cli/utils/console.dart';
 import 'external/bank_data.dart';
-import 'external/bank_data.dart';
-import 'models/account.dart';
-import 'package:intl/intl.dart';
-
 import 'models/account.dart';
 
 void showHelp() {

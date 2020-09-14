@@ -2,7 +2,7 @@ import 'package:bank_cli/bank_cli.dart' as cli;
 
 void main(List<String> arguments) async {
   if (arguments.isEmpty) {
-    await cli.deposit('200');
+    await cli.deposit('1234');
     return null;
   }
 
